@@ -25,3 +25,7 @@ func init() {
 func showVersion(cmd *cobra.Command, args []string) {
 	fmt.Printf("%s\n", version.Version)
 }
+
+func SetVersion(v *Version) {
+	version = v
+}
