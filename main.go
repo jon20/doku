@@ -9,5 +9,8 @@ var (
 )
 
 func main() {
+	cmd.SetVersion(&cmd.Version{
+		Version: version,
+	})
 	cmd.Execute()
 }
