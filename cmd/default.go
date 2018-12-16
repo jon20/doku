@@ -10,13 +10,19 @@ func defaultCmd(cmd *cobra.Command, args []string) {
 		tui.NewLabel("tui-go"),
 	)
 
-	ui, err := tui.New(box)
+	newui, err := tui.New(box)
 	if err != nil {
 		panic(err)
 	}
-	ui.SetKeybinding("Esc", func(){ ui.Quit() })
+	ui := setKetBinding(newui)
 	if err := ui.Run(); err != nil {
 		panic(err)
 	}
 
+}
+
+func setKetBinding(ui tui.UI)(tui.UI) {
+	ui.SetKeybinding("q", func() { ui.Quit() })
+
+	return ui
 }
