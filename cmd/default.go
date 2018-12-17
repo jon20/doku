@@ -6,6 +6,13 @@ import (
 )
 
 func defaultCmd(cmd *cobra.Command, args []string) {
+	if len(args) == 0 {
+		version, err := cmd.PersistentFlags().GetBool("version")
+		if err == nil && version {
+			showVersion(cmd, args)
+			return
+		}
+	}
 	box := tui.NewHBox(
 		tui.NewLabel("tui-go"),
 	)
