@@ -25,10 +25,10 @@ jobs:
 
       # specify any bash command here prefixed with `run: `
       - run:
-        name: "download dependency package"
+        name: download dependency package
         command: go mod download
       - run:
-        name: "Run Unit Tests"
+        name: Run Unit Tests
         command: go test
   release:
     docker:
@@ -39,7 +39,7 @@ jobs:
     steps:
       - checkout
       - run:
-        name: "code build"
+        name: code build
         command: go mod download
 workflows:
   version: 2
