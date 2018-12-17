@@ -18,5 +18,5 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.PersistentFlags().BoolP("version", "v", false, "aaaa")
+	rootCmd.PersistentFlags().BoolP("version", "v", false, "Show doku Version")
 }
