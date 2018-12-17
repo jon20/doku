@@ -32,7 +32,7 @@ jobs:
           command: go test
   release:
     docker:
-      image: circleci/golang:latest
+      - image: circleci/golang:latest
       environment:
         GO111MODULE: "on"
     working_directory: /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}
