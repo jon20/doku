@@ -10,7 +10,6 @@ jobs:
         environment:
           GO111MODULE: "on"
 
-
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
       # documented at https://circleci.com/docs/2.0/circleci-images/
@@ -25,4 +24,24 @@ jobs:
       - checkout
 
       # specify any bash command here prefixed with `run: `
-      - run: go mod download
+      - run:
+        name: "download dependency package"
+        command: go mod download
+      - run:
+        name: "Run Unit Tests"
+        command: go test
+  release:
+    docker:
+      image: circleci/golang:latest
+workflows:
+  version: 2
+  code_test:
+    jobs:
+      - build
+      - release:
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - master
