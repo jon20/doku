@@ -25,11 +25,11 @@ jobs:
 
       # specify any bash command here prefixed with `run: `
       - run:
-        name: download dependency package
-        command: go mod download
+          name: download dependency package
+          command: go mod download
       - run:
-        name: Run Unit Tests
-        command: go test
+          name: Run Unit Tests
+          command: go test
   release:
     docker:
       image: circleci/golang:latest
@@ -39,8 +39,8 @@ jobs:
     steps:
       - checkout
       - run:
-        name: code build
-        command: go mod download
+          name: code build
+          command: go mod download
 workflows:
   version: 2
   code_test:
