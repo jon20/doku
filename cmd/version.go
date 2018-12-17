@@ -13,7 +13,7 @@ var version *Version
 
 var versionCmd = &cobra.Command{
 	Use: "version",
-	Short: "ss",
+	Short: "show version",
 	Run: showVersion,
 }
 
