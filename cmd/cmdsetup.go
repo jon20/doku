@@ -7,6 +7,9 @@ import (
 )
 
 var rootCmd = &cobra.Command{
+	Use: "doku [Command]",
+	Short: "Docker container managemant tool",
+	Args: cobra.MaximumNArgs(1),
 	Run: defaultCmd,
 }
 
