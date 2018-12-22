@@ -3,6 +3,9 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 	"github.com/marcusolsson/tui-go"
+	"github.com/jon20/doku/utils"
+	"github.com/docker/docker/client"
+	"fmt"
 )
 
 func defaultCmd(cmd *cobra.Command, args []string) {
@@ -13,6 +16,10 @@ func defaultCmd(cmd *cobra.Command, args []string) {
 			return
 		}
 	}
+	cli, _ := client.NewEnvClient()
+	a := utils.NewDockerClient(cli)
+	con, _ := a.GetContainerList()
+	fmt.Println(con)
 	box := tui.NewHBox(
 		tui.NewLabel("tui-go"),
 	)
@@ -21,10 +28,15 @@ func defaultCmd(cmd *cobra.Command, args []string) {
 	if err != nil {
 		panic(err)
 	}
+
 	ui := setKetBinding(newui)
+	fmt.Println("aaaaaaaaaaaa")
+	fmt.Println(ui)
+	/*
 	if err := ui.Run(); err != nil {
 		panic(err)
 	}
+	*/
 
 }
 
