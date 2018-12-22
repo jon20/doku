@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"fmt"
 	"github.com/docker/docker/client"
 	"context"
 	"github.com/docker/docker/api/types"
@@ -15,15 +14,17 @@ func NewDockerClient(connect *client.Client) docker {
 	return docker{connect}
 }
 
-func (d *docker) GetImageList() error {
-	images, err := d.Client.ImageList(context.Background(), types.ImageListOptions{})
+func (d *docker) GetContainerList() (*[]types.Container, error) {
+	var containers []types.Container
+	images, err := d.Client.ContainerList(context.Background(), types.ContainerListOptions{Quiet: true})
 	if err != nil {
-		return nil
+		return nil, nil
 	}
 	for _, image := range images {
-		fmt.Println(image.ID)
-		fmt.Println(image.RepoTags)
+		if (image.State == "running") {
+			containers = append(containers, image)
+		}
 	}
-	return nil
+	return &containers, nil
 }
 
