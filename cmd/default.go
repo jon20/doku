@@ -18,7 +18,7 @@ func defaultCmd(cmd *cobra.Command, args []string) {
 	}
 	cli, _ := client.NewEnvClient()
 	a := utils.NewDockerClient(cli)
-	con, _ := a.GetContainerList()
+	con, _ := a.GetInactiveContainerList()
 	fmt.Println(con)
 	box := tui.NewHBox(
 		tui.NewLabel("tui-go"),
@@ -30,13 +30,9 @@ func defaultCmd(cmd *cobra.Command, args []string) {
 	}
 
 	ui := setKetBinding(newui)
-	fmt.Println("aaaaaaaaaaaa")
-	fmt.Println(ui)
-	/*
 	if err := ui.Run(); err != nil {
 		panic(err)
 	}
-	*/
 
 }
 
