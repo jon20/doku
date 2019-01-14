@@ -2,15 +2,16 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/spf13/cobra"
 	"os"
+
+	"github.com/spf13/cobra"
 )
 
 var rootCmd = &cobra.Command{
-	Use: "doku [Command]",
+	Use:   "doku [Command]",
 	Short: "Docker container managemant tool",
-	Args: cobra.MaximumNArgs(1),
-	Run: defaultCmd,
+	Args:  cobra.MaximumNArgs(1),
+	Run:   defaultCmd,
 }
 
 func Execute() {
