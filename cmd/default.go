@@ -8,14 +8,11 @@ import (
 	"fmt"
 )
 
-<<<<<<< Updated upstream
-=======
 var (
 	viewArr = []string{"v1", "v2", "v3", "v4"}
 	active  = 0
 )
 
->>>>>>> Stashed changes
 func defaultCmd(cmd *cobra.Command, args []string) {
 	if len(args) == 0 {
 		version, err := cmd.PersistentFlags().GetBool("version")
@@ -28,29 +25,6 @@ func defaultCmd(cmd *cobra.Command, args []string) {
 	a := utils.NewDockerClient(cli)
 	con, _ := a.GetInactiveContainerList()
 	fmt.Println(con)
-<<<<<<< Updated upstream
-	box := tui.NewHBox(
-		tui.NewLabel("tui-go"),
-	)
-
-	newui, err := tui.New(box)
-	if err != nil {
-		panic(err)
-	}
-
-	ui := setKetBinding(newui)
-	if err := ui.Run(); err != nil {
-		panic(err)
-	}
-
-}
-
-func setKetBinding(ui tui.UI)(tui.UI) {
-	ui.SetKeybinding("q", func() { ui.Quit() })
-
-	return ui
-}
-=======
 	g, err := gocui.NewGui(gocui.OutputNormal)
 	if err != nil {
 		log.Panicln(err)
@@ -157,4 +131,3 @@ func setCurrentViewOnTop(g *gocui.Gui, name string) (*gocui.View, error) {
 	}
 	return g.SetViewOnTop(name)
 }
->>>>>>> Stashed changes
