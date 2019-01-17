@@ -7,8 +7,10 @@ require (
 	github.com/docker/go-metrics v0.0.0-20181218153428-b84716841b82 // indirect
 	github.com/docker/go-units v0.3.3 // indirect
 	github.com/gorilla/mux v1.6.2 // indirect
-	github.com/marcusolsson/tui-go v0.4.0
+	github.com/jroimartin/gocui v0.4.0
+	github.com/mattn/go-runewidth v0.0.4 // indirect
 	github.com/mitchellh/go-homedir v1.0.0 // indirect
+	github.com/nsf/termbox-go v0.0.0-20190104133558-0938b5187e61 // indirect
 	github.com/opencontainers/go-digest v1.0.0-rc1 // indirect
 	github.com/opencontainers/image-spec v1.0.1 // indirect
 	github.com/pkg/errors v0.8.0 // indirect

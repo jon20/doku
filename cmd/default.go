@@ -15,6 +15,15 @@ var (
 	active  = 0
 )
 
+type sample struct {
+	art string
+	ter string
+}
+
+var samples = []sample{
+	{art: "aa", ter: "yes"},
+}
+
 func defaultCmd(cmd *cobra.Command, args []string) {
 	if len(args) == 0 {
 		version, err := cmd.PersistentFlags().GetBool("version")
@@ -82,6 +91,9 @@ func nextView(g *gocui.Gui, v *gocui.View) error {
 	if _, err := setCurrentViewOnTop(g, name); err != nil {
 		return err
 	}
+	defer g.Close()
+
+	g.SetManagerFunc(layout)
 
 	if nextIndex == 0 || nextIndex == 3 {
 		g.Cursor = true
