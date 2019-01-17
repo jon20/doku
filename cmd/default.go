@@ -1,11 +1,13 @@
 package cmd
 
 import (
-	"github.com/spf13/cobra"
-	"github.com/marcusolsson/tui-go"
-	"github.com/jon20/doku/utils"
-	"github.com/docker/docker/client"
 	"fmt"
+	"log"
+
+	"github.com/docker/docker/client"
+	"github.com/jon20/doku/utils"
+	"github.com/jroimartin/gocui"
+	"github.com/spf13/cobra"
 )
 
 var (
