@@ -79,6 +79,7 @@ func cursorDown(g *gocui.Gui, v *gocui.View) error {
 		if nextLine == "" {
 			return nil
 		}
+
 		if err := v.SetCursor(cx, cy+1); err != nil {
 			ox, oy := v.Origin()
 			if err := v.SetOrigin(ox, oy+1); err != nil {
