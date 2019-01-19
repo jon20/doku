@@ -129,7 +129,7 @@ func nextView(g *gocui.Gui, v *gocui.View) error {
 }
 func layout(g *gocui.Gui) error {
 	maxX, maxY := g.Size()
-	if v, err := g.SetView("Image", 0, 0, maxX-1, maxY/2); err != nil {
+	if v, err := g.SetView("Image List", 0, 0, maxX-1, maxY/2); err != nil {
 		if err != gocui.ErrUnknownView {
 			return err
 		}
@@ -142,16 +142,16 @@ func layout(g *gocui.Gui) error {
 		fmt.Fprintln(v, "Item 4")
 		v.SetOrigin(0, 0)
 		v.SetCursor(0, 0)
-		if _, err = setCurrentViewOnTop(g, "Image"); err != nil {
+		if _, err = setCurrentViewOnTop(g, v.Name()); err != nil {
 			return err
 		}
 	}
 
-	if v, err := g.SetView("v2", 0, maxY/2, maxX-1, maxY-1); err != nil {
+	if v, err := g.SetView("Container List", 0, maxY/2, maxX-1, maxY-1); err != nil {
 		if err != gocui.ErrUnknownView {
 			return err
 		}
-		v.Title = "v2"
+		v.Title = v.Name()
 		v.Wrap = true
 		v.Autoscroll = true
 
