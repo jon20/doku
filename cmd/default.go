@@ -8,21 +8,13 @@ import (
 	"github.com/jon20/doku/utils"
 	"github.com/jroimartin/gocui"
 	"github.com/spf13/cobra"
+	"github.com/willf/pad"
 )
 
 var (
 	viewArr = []string{"v1", "v2", "v3", "v4"}
 	active  = 0
 )
-
-type sample struct {
-	art string
-	ter string
-}
-
-var samples = []sample{
-	{art: "aa", ter: "yes"},
-}
 
 func defaultCmd(cmd *cobra.Command, args []string) {
 	if len(args) == 0 {
@@ -32,10 +24,6 @@ func defaultCmd(cmd *cobra.Command, args []string) {
 			return
 		}
 	}
-	cli, _ := client.NewEnvClient()
-	a := utils.NewDockerClient(cli)
-	con, _ := a.GetInactiveContainerList()
-	fmt.Println(con)
 	g, err := gocui.NewGui(gocui.OutputNormal)
 	if err != nil {
 		log.Panicln(err)
@@ -127,19 +115,41 @@ func nextView(g *gocui.Gui, v *gocui.View) error {
 	active = nextIndex
 	return nil
 }
+
+type hello struct {
+	ID   string `tag:"ID"`
+	Name string `tag:"Name"`
+}
+
 func layout(g *gocui.Gui) error {
 	maxX, maxY := g.Size()
-	if v, err := g.SetView("Image List", 0, 0, maxX-1, maxY/2); err != nil {
+	if v, err := g.SetView("Image", 0, 0, maxX-1, maxY/2); err != nil {
+		if err != gocui.ErrUnknownView {
+			panic(err)
+		}
+		v.Wrap = true
+		v.Frame = true
+		v.Title = v.Name()
+		v.FgColor = gocui.AttrBold | gocui.ColorRed
+		line := pad.Right("name", 10, " ") + pad.Right("image", 10, " ")
+		fmt.Fprintln(v, line)
+	}
+	if v, err := g.SetView("Image List", 0, 1, maxX-1, maxY/2); err != nil {
 		if err != gocui.ErrUnknownView {
 			return err
 		}
+
 		v.Title = v.Name()
-		v.Frame = true
+		v.Frame = false
 		v.Wrap = true
-		fmt.Fprintln(v, "Item 1")
-		fmt.Fprintln(v, "Item 2")
-		fmt.Fprintln(v, "Item 3")
-		fmt.Fprintln(v, "Item 4")
+		v.Highlight = true
+		cli, _ := client.NewEnvClient()
+		a := utils.NewDockerClient(cli)
+		con, _ := a.GetImageList()
+		fmt.Sprintf("%s:%s", "goo", "aaa")
+		for _, item := range *con {
+			fmt.Fprintln(v, hello{ID: item.RepoTags[0], Name: item.ParentID})
+		}
 		v.SetOrigin(0, 0)
 		v.SetCursor(0, 0)
 		if _, err = setCurrentViewOnTop(g, v.Name()); err != nil {
@@ -154,7 +164,6 @@ func layout(g *gocui.Gui) error {
 		v.Title = v.Name()
 		v.Wrap = true
 		v.Autoscroll = true
-
 	}
 	return nil
 }
@@ -167,4 +176,8 @@ func setCurrentViewOnTop(g *gocui.Gui, name string) (*gocui.View, error) {
 		return nil, err
 	}
 	return g.SetViewOnTop(name)
+}
+
+func ShowContainerList(v *gocui.View) {
+	fmt.Println(v)
 }
