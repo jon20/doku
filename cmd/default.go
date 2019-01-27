@@ -131,9 +131,10 @@ func layout(g *gocui.Gui) error {
 		v.Frame = true
 		v.Title = v.Name()
 		v.FgColor = gocui.AttrBold | gocui.ColorRed
-		line := pad.Right("name", 10, " ") + pad.Right("image", 10, " ")
+		line := pad.Right("REPOSITORY", 20, " ") + pad.Right("TAG", 10, " ") + pad.Right("IMAGE ID", 10, " ") + pad.Right("SIZE", 10, " ")
 		fmt.Fprintln(v, line)
 	}
+	// View: image
 	if v, err := g.SetView("Image List", 0, 1, maxX-1, maxY/2); err != nil {
 		if err != gocui.ErrUnknownView {
 			return err
@@ -146,7 +147,6 @@ func layout(g *gocui.Gui) error {
 		cli, _ := client.NewEnvClient()
 		a := utils.NewDockerClient(cli)
 		con, _ := a.GetImageList()
-		fmt.Sprintf("%s:%s", "goo", "aaa")
 		for _, item := range *con {
 			fmt.Fprintln(v, hello{ID: item.RepoTags[0], Name: item.ParentID})
 		}
