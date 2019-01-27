@@ -17,5 +17,6 @@ require (
 	github.com/prometheus/client_golang v0.9.2 // indirect
 	github.com/spf13/cobra v0.0.3
 	github.com/spf13/viper v1.3.1 // indirect
+	github.com/willf/pad v0.0.0-20160331131008-b3d780601022
 	golang.org/x/net v0.0.0-20181217023233-e147a9138326 // indirect
 )
