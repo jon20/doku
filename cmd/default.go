@@ -3,6 +3,8 @@ package cmd
 import (
 	"fmt"
 	"log"
+	"strconv"
+	"strings"
 	"unicode/utf8"
 
 	"github.com/docker/docker/client"
@@ -132,8 +134,8 @@ func layout(g *gocui.Gui) error {
 		v.Frame = true
 		v.Title = v.Name()
 		v.FgColor = gocui.AttrBold | gocui.ColorRed
-		//line := FormatImageLine(v, "REPOSITORY", "TAG", "IMAGE ID", "SIZE")
-		line := pad.Right("REPOSITORY", 20, " ") + pad.Right("TAG", 10, " ") + pad.Right("IMAGE ID", 10, " ") + pad.Right("SIZE", 10, " ")
+		line := FormatImageLine(v, "REPOSITORY", "TAG", "IMAGE ID", "SIZE")
+		//line := pad.Right("REPOSITORY", 20, " ") + pad.Right("TAG", 10, " ") + pad.Right("IMAGE ID", 10, " ") + pad.Right("SIZE", 10, " ")
 		fmt.Fprintln(v, line)
 	}
 	// View: image
@@ -150,7 +152,9 @@ func layout(g *gocui.Gui) error {
 		dockerHandler := utils.NewDockerClient(cli)
 		images, _ := dockerHandler.GetImageList()
 		for _, item := range *images {
-			line := FormatImageLine(v, item.RepoTags[0], item.RepoTags[0], item.ID, string(item.Size))
+			splitline := strings.Split(item.RepoTags[0], ":")
+			size := strconv.FormatInt(item.Size, 10)
+			line := FormatImageLine(v, splitline[0], splitline[0], splitline[0], size)
 			fmt.Fprintln(v, line)
 		}
 		v.SetOrigin(0, 0)
@@ -186,7 +190,7 @@ func ShowContainerList(v *gocui.View) {
 }
 
 func FormatImageLine(v *gocui.View, repository string, tag string, imageID string, size string) string {
-	line := pad.Right(repository, 20, " ") + pad.Right(tag, 10, " ") + pad.Right(imageID, 10, " ") + pad.Right(size, 10, " ")
+	line := pad.Right(repository, 20, " ") + pad.Right(tag, 30, " ") + pad.Right(imageID, 30, " ") + pad.Right(size, 10, " ")
 	return line
 }
 
