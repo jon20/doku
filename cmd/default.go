@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"log"
+	"unicode/utf8"
 
 	"github.com/docker/docker/client"
 	"github.com/jon20/doku/utils"
@@ -131,6 +132,7 @@ func layout(g *gocui.Gui) error {
 		v.Frame = true
 		v.Title = v.Name()
 		v.FgColor = gocui.AttrBold | gocui.ColorRed
+		//line := FormatImageLine(v, "REPOSITORY", "TAG", "IMAGE ID", "SIZE")
 		line := pad.Right("REPOSITORY", 20, " ") + pad.Right("TAG", 10, " ") + pad.Right("IMAGE ID", 10, " ") + pad.Right("SIZE", 10, " ")
 		fmt.Fprintln(v, line)
 	}
@@ -145,10 +147,11 @@ func layout(g *gocui.Gui) error {
 		v.Wrap = true
 		v.Highlight = true
 		cli, _ := client.NewEnvClient()
-		a := utils.NewDockerClient(cli)
-		con, _ := a.GetImageList()
-		for _, item := range *con {
-			fmt.Fprintln(v, hello{ID: item.RepoTags[0], Name: item.ParentID})
+		dockerHandler := utils.NewDockerClient(cli)
+		images, _ := dockerHandler.GetImageList()
+		for _, item := range *images {
+			line := FormatImageLine(v, item.RepoTags[0], item.RepoTags[0], item.ID, string(item.Size))
+			fmt.Fprintln(v, line)
 		}
 		v.SetOrigin(0, 0)
 		v.SetCursor(0, 0)
@@ -180,4 +183,16 @@ func setCurrentViewOnTop(g *gocui.Gui, name string) (*gocui.View, error) {
 
 func ShowContainerList(v *gocui.View) {
 	fmt.Println(v)
+}
+
+func FormatImageLine(v *gocui.View, repository string, tag string, imageID string, size string) string {
+	line := pad.Right(repository, 20, " ") + pad.Right(tag, 10, " ") + pad.Right(imageID, 10, " ") + pad.Right(size, 10, " ")
+	return line
+}
+
+func LimitStringLine(words string, maxLength int) string {
+	if utf8.RuneCountInString(words) > maxLength {
+		return words[:maxLength]
+	}
+	return ""
 }
