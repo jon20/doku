@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"log"
+	"os"
 	"strconv"
 	"strings"
 	"unicode/utf8"
@@ -40,7 +41,9 @@ func defaultCmd(cmd *cobra.Command, args []string) {
 	setKeyBindings(g)
 
 	if err := g.MainLoop(); err != nil && err != gocui.ErrQuit {
-		log.Panicln(err)
+		g.Close()
+		log.Println(err)
+		os.Exit(1)
 	}
 
 }
@@ -119,11 +122,6 @@ func nextView(g *gocui.Gui, v *gocui.View) error {
 	return nil
 }
 
-type hello struct {
-	ID   string `tag:"ID"`
-	Name string `tag:"Name"`
-}
-
 func layout(g *gocui.Gui) error {
 	maxX, maxY := g.Size()
 	if v, err := g.SetView("Image", 0, 0, maxX-1, maxY/2); err != nil {
@@ -134,7 +132,7 @@ func layout(g *gocui.Gui) error {
 		v.Frame = true
 		v.Title = v.Name()
 		v.FgColor = gocui.AttrBold | gocui.ColorRed
-		line := FormatImageLine(v, "REPOSITORY", "TAG", "IMAGE ID", "SIZE")
+		line := FormatImageLine(v, "REPOSITORY", "TAG", "IMAGE ID", "SIZE", maxX)
 		//line := pad.Right("REPOSITORY", 20, " ") + pad.Right("TAG", 10, " ") + pad.Right("IMAGE ID", 10, " ") + pad.Right("SIZE", 10, " ")
 		fmt.Fprintln(v, line)
 	}
@@ -148,13 +146,20 @@ func layout(g *gocui.Gui) error {
 		v.Frame = false
 		v.Wrap = true
 		v.Highlight = true
-		cli, _ := client.NewEnvClient()
+		cli, err := client.NewEnvClient()
+		if err != nil {
+			return err
+		}
 		dockerHandler := utils.NewDockerClient(cli)
-		images, _ := dockerHandler.GetImageList()
+		images, err := dockerHandler.GetImageList()
+		if err != nil {
+			return err
+		}
 		for _, item := range *images {
 			splitline := strings.Split(item.RepoTags[0], ":")
 			size := strconv.FormatInt(item.Size, 10)
-			line := FormatImageLine(v, splitline[0], splitline[0], splitline[0], size)
+			line := FormatImageLine(v, splitline[0], splitline[0], splitline[0], size, maxX)
+			fmt.Fprintln(v, maxX/2)
 			fmt.Fprintln(v, line)
 		}
 		v.SetOrigin(0, 0)
@@ -189,8 +194,8 @@ func ShowContainerList(v *gocui.View) {
 	fmt.Println(v)
 }
 
-func FormatImageLine(v *gocui.View, repository string, tag string, imageID string, size string) string {
-	line := pad.Right(repository, 20, " ") + pad.Right(tag, 30, " ") + pad.Right(imageID, 30, " ") + pad.Right(size, 10, " ")
+func FormatImageLine(v *gocui.View, repository string, tag string, imageID string, size string, maxX int) string {
+	line := pad.Right(repository, maxX/4, " ") + pad.Right(tag, 30, " ") + pad.Right(imageID, 30, " ") + pad.Right(size, 10, " ")
 	return line
 }
 
