@@ -146,22 +146,7 @@ func layout(g *gocui.Gui) error {
 		v.Frame = false
 		v.Wrap = true
 		v.Highlight = true
-		cli, err := client.NewEnvClient()
-		if err != nil {
-			return err
-		}
-		dockerHandler := utils.NewDockerClient(cli)
-		images, err := dockerHandler.GetImageList()
-		if err != nil {
-			return err
-		}
-		for _, item := range *images {
-			splitline := strings.Split(item.RepoTags[0], ":")
-			size := strconv.FormatInt(item.Size, 10)
-			line := FormatImageLine(v, splitline[0], splitline[0], splitline[0], size, maxX)
-			fmt.Fprintln(v, maxX/2)
-			fmt.Fprintln(v, line)
-		}
+		go ShowContainerListWithAutoRefresh(g, v)
 		v.SetOrigin(0, 0)
 		v.SetCursor(0, 0)
 		if _, err = setCurrentViewOnTop(g, v.Name()); err != nil {
@@ -190,12 +175,29 @@ func setCurrentViewOnTop(g *gocui.Gui, name string) (*gocui.View, error) {
 	return g.SetViewOnTop(name)
 }
 
-func ShowContainerList(v *gocui.View) {
-	fmt.Println(v)
+func ShowContainerListWithAutoRefresh(g *gocui.Gui, v *gocui.View) error {
+	maxX, _ := g.Size()
+	cli, err := client.NewEnvClient()
+	if err != nil {
+		return err
+	}
+	dockerHandler := utils.NewDockerClient(cli)
+	images, err := dockerHandler.GetImageList()
+	if err != nil {
+		return err
+	}
+	for _, item := range *images {
+		splitline := strings.Split(item.RepoTags[0], ":")
+		size := strconv.FormatInt(item.Size, 10)
+		line := FormatImageLine(v, splitline[0], splitline[0], splitline[0], size, maxX)
+		fmt.Fprintln(v, line)
+	}
+	return nil
 }
 
 func FormatImageLine(v *gocui.View, repository string, tag string, imageID string, size string, maxX int) string {
-	line := pad.Right(repository, maxX/4, " ") + pad.Right(tag, 30, " ") + pad.Right(imageID, 30, " ") + pad.Right(size, 10, " ")
+	// 30 30 10
+	line := pad.Right(repository, maxX/4, " ") + pad.Right(tag, maxX/5, " ") + pad.Right(imageID, maxX/5, " ") + pad.Right(size, maxX/6, " ")
 	return line
 }
 
