@@ -6,6 +6,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 	"unicode/utf8"
 
 	"github.com/docker/docker/client"
@@ -146,7 +147,7 @@ func layout(g *gocui.Gui) error {
 		v.Frame = false
 		v.Wrap = true
 		v.Highlight = true
-		go ShowContainerListWithAutoRefresh(g, v)
+		go ShowContainerListWithAutoRefresh(g)
 		v.SetOrigin(0, 0)
 		v.SetCursor(0, 0)
 		if _, err = setCurrentViewOnTop(g, v.Name()); err != nil {
@@ -175,26 +176,41 @@ func setCurrentViewOnTop(g *gocui.Gui, name string) (*gocui.View, error) {
 	return g.SetViewOnTop(name)
 }
 
-func ShowContainerListWithAutoRefresh(g *gocui.Gui, v *gocui.View) error {
-	maxX, _ := g.Size()
-	cli, err := client.NewEnvClient()
-	if err != nil {
-		return err
+func ShowContainerListWithAutoRefresh(g *gocui.Gui) {
+	go ImagesRefresh(g)
+	t := time.NewTicker(time.Duration(100 * time.Millisecond))
+	for {
+		select {
+		case <-t.C:
+			go ImagesRefresh(g)
+		}
 	}
-	dockerHandler := utils.NewDockerClient(cli)
-	images, err := dockerHandler.GetImageList()
-	if err != nil {
-		return err
-	}
-	for _, item := range *images {
-		splitline := strings.Split(item.RepoTags[0], ":")
-		size := strconv.FormatInt(item.Size, 10)
-		line := FormatImageLine(v, splitline[0], splitline[0], splitline[0], size, maxX)
-		fmt.Fprintln(v, line)
-	}
-	return nil
 }
 
+func ImagesRefresh(g *gocui.Gui) {
+	g.Update(func(g *gocui.Gui) error {
+		maxX, _ := g.Size()
+		v, err := g.View("Image List")
+		fmt.Fprintln(v, maxX)
+		cli, err := client.NewEnvClient()
+		if err != nil {
+			return err
+		}
+		v.Clear()
+		dockerHandler := utils.NewDockerClient(cli)
+		images, err := dockerHandler.GetImageList()
+		if err != nil {
+			return err
+		}
+		for _, item := range *images {
+			splitline := strings.Split(item.RepoTags[0], ":")
+			size := strconv.FormatInt(item.Size, 10)
+			line := FormatImageLine(v, splitline[0], splitline[0], splitline[0], size, maxX)
+			fmt.Fprintln(v, line)
+		}
+		return nil
+	})
+}
 func FormatImageLine(v *gocui.View, repository string, tag string, imageID string, size string, maxX int) string {
 	// 30 30 10
 	line := pad.Right(repository, maxX/4, " ") + pad.Right(tag, maxX/5, " ") + pad.Right(imageID, maxX/5, " ") + pad.Right(size, maxX/6, " ")
