@@ -179,7 +179,7 @@ func setCurrentViewOnTop(g *gocui.Gui, name string) (*gocui.View, error) {
 func ShowContainerListWithAutoRefresh(g *gocui.Gui) {
 	go ImagesRefresh(g)
 	go ContainerListTitleResize(g)
-	t := time.NewTicker(time.Duration(100 * time.Millisecond))
+	t := time.NewTicker(time.Duration(200 * time.Millisecond))
 	for {
 		select {
 		case <-t.C:
