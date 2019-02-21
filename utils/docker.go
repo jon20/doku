@@ -45,7 +45,7 @@ func (d *docker) GetImageList() (*[]types.ImageSummary, error) {
 	var imageLists []types.ImageSummary
 	images, err := d.Client.ImageList(context.Background(), types.ImageListOptions{All: true})
 	if err != nil {
-		return nil, nil
+		return nil, err
 	}
 	for _, image := range images {
 		imageLists = append(imageLists, image)
