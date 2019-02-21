@@ -178,13 +178,29 @@ func setCurrentViewOnTop(g *gocui.Gui, name string) (*gocui.View, error) {
 
 func ShowContainerListWithAutoRefresh(g *gocui.Gui) {
 	go ImagesRefresh(g)
+	go ContainerListTitleResize(g)
 	t := time.NewTicker(time.Duration(100 * time.Millisecond))
 	for {
 		select {
 		case <-t.C:
 			go ImagesRefresh(g)
+			go ContainerListTitleResize(g)
 		}
 	}
+}
+
+func ContainerListTitleResize(g *gocui.Gui) {
+	g.Update(func(g *gocui.Gui) error {
+		maxX, _ := g.Size()
+		v, err := g.View("Image")
+		if err != nil {
+			return err
+		}
+		v.Clear()
+		line := FormatImageLine(v, "REPOSITORY", "TAG", "IMAGE ID", "SIZE", maxX)
+		fmt.Fprintln(v, line)
+		return nil
+	})
 }
 
 func ImagesRefresh(g *gocui.Gui) {
@@ -213,7 +229,7 @@ func ImagesRefresh(g *gocui.Gui) {
 }
 func FormatImageLine(v *gocui.View, repository string, tag string, imageID string, size string, maxX int) string {
 	// 30 30 10
-	line := pad.Right(repository, maxX/4, " ") + pad.Right(tag, maxX/5, " ") + pad.Right(imageID, maxX/5, " ") + pad.Right(size, maxX/6, " ")
+	line := pad.Right(repository, maxX/3, " ") + pad.Right(tag, maxX/5, " ") + pad.Right(imageID, maxX/5, " ") + pad.Right(size, maxX/6, " ")
 	return line
 }
 
