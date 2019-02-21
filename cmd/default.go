@@ -207,7 +207,6 @@ func ImagesRefresh(g *gocui.Gui) {
 	g.Update(func(g *gocui.Gui) error {
 		maxX, _ := g.Size()
 		v, err := g.View("Image List")
-		fmt.Fprintln(v, maxX)
 		cli, err := client.NewEnvClient()
 		if err != nil {
 			return err
