@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"fmt"
 	"log"
 	"os"
 
@@ -9,11 +8,6 @@ import (
 
 	"github.com/jroimartin/gocui"
 	"github.com/spf13/cobra"
-)
-
-var (
-	viewArr = []string{"v1", "v2", "v3", "v4"}
-	active  = 0
 )
 
 func defaultCmd(cmd *cobra.Command, args []string) {
@@ -30,9 +24,6 @@ func defaultCmd(cmd *cobra.Command, args []string) {
 	}
 	defer g.Close()
 	g.SetManagerFunc(layout)
-	g.Highlight = true
-	g.Cursor = true
-	g.SelFgColor = gocui.ColorGreen
 
 	setKeyBindings(g)
 
@@ -48,99 +39,22 @@ func setKeyBindings(g *gocui.Gui) {
 	if err := g.SetKeybinding("", gocui.KeyCtrlC, gocui.ModNone, quit); err != nil {
 		log.Panicln(err)
 	}
-	if err := g.SetKeybinding("", gocui.KeyTab, gocui.ModNone, nextView); err != nil {
+	if err := g.SetKeybinding("", gocui.KeyArrowDown, gocui.ModNone, ui.CursorDown); err != nil {
 		log.Panicln(err)
 	}
-	if err := g.SetKeybinding("", gocui.KeyArrowDown, gocui.ModNone, cursorDown); err != nil {
-		log.Panicln(err)
-	}
-	if err := g.SetKeybinding("", gocui.KeyArrowUp, gocui.ModNone, cursorUp); err != nil {
+	if err := g.SetKeybinding("", gocui.KeyArrowUp, gocui.ModNone, ui.CursorUp); err != nil {
 		log.Panicln(err)
 	}
 
-}
-func cursorDown(g *gocui.Gui, v *gocui.View) error {
-	if v != nil {
-		cx, cy := v.Cursor()
-		nextLine, err := v.Line(cy + 1)
-		if err != nil {
-			return nil
-		}
-		if nextLine == "" {
-			return nil
-		}
-
-		if err := v.SetCursor(cx, cy+1); err != nil {
-			ox, oy := v.Origin()
-			if err := v.SetOrigin(ox, oy+1); err != nil {
-				return err
-			}
-		}
-	}
-	return nil
-}
-
-func cursorUp(g *gocui.Gui, v *gocui.View) error {
-	if v != nil {
-		ox, oy := v.Origin()
-		cx, cy := v.Cursor()
-		if err := v.SetCursor(cx, cy-1); err != nil && oy > 0 {
-			if err := v.SetOrigin(ox, oy-1); err != nil {
-				return err
-			}
-		}
-	}
-	return nil
-}
-func nextView(g *gocui.Gui, v *gocui.View) error {
-	nextIndex := (active + 1) % len(viewArr)
-	name := viewArr[nextIndex]
-
-	out, err := g.View("v2")
-	if err != nil {
-		return err
-	}
-	fmt.Fprintln(out, "Going from view "+v.Name()+" to "+name)
-
-	if _, err := setCurrentViewOnTop(g, name); err != nil {
-		return err
-	}
-	defer g.Close()
-
-	g.SetManagerFunc(layout)
-
-	if nextIndex == 0 || nextIndex == 3 {
-		g.Cursor = true
-	} else {
-		g.Cursor = false
-	}
-
-	active = nextIndex
-	return nil
 }
 
 func layout(g *gocui.Gui) error {
 	maxX, maxY := g.Size()
 	ui.ImageListView(g, maxX, maxY)
-
-	if v, err := g.SetView("Container List", 0, maxY/2, maxX-1, maxY-1); err != nil {
-		if err != gocui.ErrUnknownView {
-			return err
-		}
-		v.Title = v.Name()
-		v.Wrap = true
-		v.Autoscroll = true
-	}
+	ui.ContainerListView(g, maxX, maxY)
 	return nil
 }
 
 func quit(g *gocui.Gui, v *gocui.View) error {
 	return gocui.ErrQuit
-}
-
-func setCurrentViewOnTop(g *gocui.Gui, name string) (*gocui.View, error) {
-	if _, err := g.SetCurrentView(name); err != nil {
-		return nil, err
-	}
-	return g.SetViewOnTop(name)
 }
