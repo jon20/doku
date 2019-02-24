@@ -7,9 +7,9 @@ import (
 	"github.com/docker/docker/client"
 
 	"github.com/jroimartin/gocui"
-	"github.com/willf/pad"
 )
 
+// Image List View creates docker image list components
 func ImageListView(g *gocui.Gui, maxX int, maxY int) error {
 
 	v, err := g.SetView("Image", 0, 0, maxX-1, maxY/2)
@@ -21,11 +21,8 @@ func ImageListView(g *gocui.Gui, maxX int, maxY int) error {
 	v.Title = v.Name()
 	v.FgColor = gocui.AttrBold | gocui.ColorRed
 	v.Clear()
-	linea := pad.Right("REPOSITORYDA", maxX/3, " ") + pad.Right("TAG", maxX/5, " ") + pad.Right("IMAGE ID", maxX/5, " ") + pad.Right("SIZE", maxX/6, " ")
-	fmt.Fprintln(v, linea)
-	//line := FormatImageLine(v, "REPOSITORY", "TAG", "IMAGE ID", "SIZE", maxX)
-	//line := pad.Right("REPOSITORY", 20, " ") + pad.Right("TAG", 10, " ") + pad.Right("IMAGE ID", 10, " ") + pad.Right("SIZE", 10, " ")
-	//fmt.Fprintln(v, line)
+	line := FormatImageLine(v, "REPOSITORY", "TAG", "IMAGE ID", "SIZE", maxX)
+	fmt.Fprintln(v, line)
 
 	v, err = g.SetView("Image List", 0, 1, maxX-1, maxY/2)
 	if err != nil && err != gocui.ErrUnknownView {
@@ -44,9 +41,24 @@ func ImageListView(g *gocui.Gui, maxX int, maxY int) error {
 	go ShowContainerListWithAutoRefresh(g, &dockerHandler)
 	v.SetOrigin(0, 0)
 	v.SetCursor(0, 0)
-	//if _, err = setCurrentViewOnTop(g, v.Name()); err != nil {
-	//	return err
-	//}
+	if _, err = SetCurrentViewOnTop(g, v.Name()); err != nil {
+		return err
+	}
 	return nil
 
+}
+
+// Image List View creates docker container list components
+func ContainerListView(g *gocui.Gui, maxX int, maxY int) error {
+
+	v, err := g.SetView("Container List", 0, maxY/2, maxX-1, maxY-1)
+
+	if err != nil && err != gocui.ErrUnknownView {
+		panic(err)
+	}
+	v.Title = v.Name()
+	v.Wrap = true
+	v.Autoscroll = true
+
+	return nil
 }
