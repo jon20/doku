@@ -17,7 +17,7 @@ func NewDockerClient(connect *client.Client) Docker {
 
 func (d *Docker) GetActiveContainerList() (*[]types.Container, error) {
 	var containers []types.Container
-	images, err := d.Client.ContainerList(context.Background(), types.ContainerListOptions{Quiet: true})
+	images, err := d.Client.ContainerList(context.Background(), types.ContainerListOptions{All: true})
 	if err != nil {
 		return nil, nil
 	}
