@@ -8,16 +8,17 @@ import (
 	"time"
 	"unicode/utf8"
 
+	"github.com/docker/docker/client"
 	"github.com/jroimartin/gocui"
 	"github.com/willf/pad"
 )
 
-func ShowContainerListWithAutoRefresh(g *gocui.Gui, dockerHandler *utils.Docker) {
+func ShowContainerListWithAutoRefresh(g *gocui.Gui) {
 	t := time.NewTicker(time.Duration(1 * time.Second))
 	for {
 		select {
 		case <-t.C:
-			go ImagesRefresh(g, dockerHandler)
+			ImagesRefresh(g)
 			//go ContainerListTitleResize(g)
 		}
 	}
@@ -36,13 +37,19 @@ func ContainerListTitleResize(g *gocui.Gui) {
 		return nil
 	})
 }
-func ImagesRefresh(g *gocui.Gui, dockerHandler *utils.Docker) {
+func ImagesRefresh(g *gocui.Gui) {
 	g.Update(func(g *gocui.Gui) error {
 		maxX, _ := g.Size()
 		v, err := g.View("Image List")
 		if err != nil {
 			return err
 		}
+		cli, err := client.NewEnvClient()
+		if err != nil {
+			return err
+		}
+		defer cli.Close()
+		dockerHandler := utils.NewDockerClient(cli)
 		images, err := dockerHandler.GetImageList()
 		if err != nil {
 			return err
