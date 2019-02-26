@@ -30,7 +30,7 @@ func ImageListView(g *gocui.Gui, maxX int, maxY int) error {
 	v.Frame = false
 	v.Wrap = true
 	v.Highlight = true
-	go ShowContainerListWithAutoRefresh(g)
+	go ShowImageListWithAutoRefresh(g)
 	v.SetOrigin(0, 0)
 	v.SetCursor(0, 0)
 	if _, err = SetCurrentViewOnTop(g, v.Name()); err != nil {
@@ -51,6 +51,7 @@ func ContainerListView(g *gocui.Gui, maxX int, maxY int) error {
 	v.Title = v.Name()
 	v.Wrap = true
 	v.Autoscroll = true
+	go ShowContainerListWithAutoRefresh(g)
 
 	return nil
 }
