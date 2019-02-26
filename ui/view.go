@@ -1,10 +1,7 @@
 package ui
 
 import (
-	"doku/utils"
 	"fmt"
-
-	"github.com/docker/docker/client"
 
 	"github.com/jroimartin/gocui"
 )
@@ -33,12 +30,7 @@ func ImageListView(g *gocui.Gui, maxX int, maxY int) error {
 	v.Frame = false
 	v.Wrap = true
 	v.Highlight = true
-	cli, err := client.NewEnvClient()
-	if err != nil {
-		return err
-	}
-	dockerHandler := utils.NewDockerClient(cli)
-	go ShowContainerListWithAutoRefresh(g, &dockerHandler)
+	go ShowContainerListWithAutoRefresh(g)
 	v.SetOrigin(0, 0)
 	v.SetCursor(0, 0)
 	if _, err = SetCurrentViewOnTop(g, v.Name()); err != nil {
