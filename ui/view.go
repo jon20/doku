@@ -42,13 +42,24 @@ func ImageListView(g *gocui.Gui, maxX int, maxY int) error {
 
 // Image List View creates docker container list components
 func ContainerListView(g *gocui.Gui, maxX int, maxY int) error {
-
 	v, err := g.SetView("Container List", 0, maxY/2, maxX-1, maxY-1)
+	if err != nil && err != gocui.ErrUnknownView {
+		panic(err)
+	}
+	v.Wrap = true
+	v.Frame = true
+	v.Title = v.Name()
+	v.FgColor = gocui.AttrBold | gocui.ColorRed
+	v.Clear()
+	line := FormatImageLine(v, "CONTAINER ID", "Run Status", "IMAGE", "Names", maxX)
+	fmt.Fprintln(v, line)
+
+	v, err = g.SetView("Container", 0, maxY/2+1, maxX-1, maxY-1)
 
 	if err != nil && err != gocui.ErrUnknownView {
 		panic(err)
 	}
-	v.Title = v.Name()
+	v.Frame = false
 	v.Wrap = true
 	v.Autoscroll = true
 	go ShowContainerListWithAutoRefresh(g)
