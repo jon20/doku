@@ -67,7 +67,7 @@ func ShowContainerListWithAutoRefresh(g *gocui.Gui) {
 func ContainerListRefresh(g *gocui.Gui) {
 	g.Update(func(g *gocui.Gui) error {
 		maxX, _ := g.Size()
-		v, err := g.View("Container List")
+		v, err := g.View("Container")
 		if err != nil {
 			return err
 		}
@@ -83,7 +83,7 @@ func ContainerListRefresh(g *gocui.Gui) {
 		}
 		v.Clear()
 		for _, item := range *containers {
-			line := FormatImageLine(v, item.Names[0], item.Image, item.State, item.Status, maxX)
+			line := FormatImageLine(v, item.Names[0], item.State, item.State, item.Names[0], maxX)
 			fmt.Fprintln(v, line)
 		}
 		return nil
