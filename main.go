@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/jon20/doku/cmd"
+	"doku/cmd"
 )
 
 var (
