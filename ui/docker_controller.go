@@ -27,7 +27,7 @@ func ShowImageListWithAutoRefresh(g *gocui.Gui) {
 func ImagesRefresh(g *gocui.Gui) {
 	g.Update(func(g *gocui.Gui) error {
 		maxX, _ := g.Size()
-		v, err := g.View("Image List")
+		v, err := g.View("Image")
 		if err != nil {
 			return err
 		}
@@ -45,10 +45,10 @@ func ImagesRefresh(g *gocui.Gui) {
 		for _, item := range *images {
 			splitline := strings.Split(item.RepoTags[0], ":")
 			size := strconv.FormatInt(item.Size, 10)
-			fmt.Fprintln(v, splitline)
 			line := FormatImageLine(v, splitline[0], splitline[0], splitline[0], size, maxX)
 			fmt.Fprintln(v, line)
 		}
+		v.SetCursor(0, 0)
 		return nil
 	})
 }
