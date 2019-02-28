@@ -27,20 +27,6 @@ func (d *Docker) GetActiveContainerList() (*[]types.Container, error) {
 	return &containers, nil
 }
 
-func (d *Docker) GetInactiveContainerList() (*[]types.Container, error) {
-	var containers []types.Container
-	images, err := d.Client.ContainerList(context.Background(), types.ContainerListOptions{All: true})
-	if err != nil {
-		return nil, nil
-	}
-	for _, image := range images {
-		if image.State != "running" {
-			containers = append(containers, image)
-		}
-	}
-	return &containers, nil
-}
-
 func (d *Docker) GetImageList() (*[]types.ImageSummary, error) {
 	var imageLists []types.ImageSummary
 	images, err := d.Client.ImageList(context.Background(), types.ImageListOptions{All: true})
