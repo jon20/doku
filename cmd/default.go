@@ -25,7 +25,7 @@ func defaultCmd(cmd *cobra.Command, args []string) {
 	defer g.Close()
 	g.SetManagerFunc(layout)
 
-	setKeyBindings(g)
+	SetKeyBindings(g)
 
 	if err := g.MainLoop(); err != nil && err != gocui.ErrQuit {
 		g.Close()
@@ -35,7 +35,7 @@ func defaultCmd(cmd *cobra.Command, args []string) {
 
 }
 
-func setKeyBindings(g *gocui.Gui) {
+func SetKeyBindings(g *gocui.Gui) {
 	if err := g.SetKeybinding("", gocui.KeyCtrlC, gocui.ModNone, quit); err != nil {
 		log.Panicln(err)
 	}
