@@ -43,7 +43,12 @@ func ImagesRefresh(g *gocui.Gui) {
 		}
 		v.Clear()
 		for _, item := range *images {
-			splitline := strings.Split(item.RepoTags[0], ":")
+			//splitline := strings.Split(item.RepoTags[0], ":")
+			splitline := item.RepoTags
+			if len(splitline) == 0 {
+				break
+			}
+			splitline = strings.Split(splitline[0], ":")
 			size := strconv.FormatInt(item.Size, 10)
 			line := FormatImageLine(v, splitline[0], splitline[0], splitline[0], size, maxX)
 			fmt.Fprintln(v, line)
