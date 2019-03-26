@@ -42,6 +42,9 @@ func ImagesRefresh(g *gocui.Gui) {
 			return err
 		}
 		v.Clear()
+
+		v.SelBgColor = gocui.ColorGreen
+		v.SelFgColor = gocui.ColorBlack
 		for _, item := range *images {
 			//splitline := strings.Split(item.RepoTags[0], ":")
 			splitline := item.RepoTags
@@ -53,7 +56,9 @@ func ImagesRefresh(g *gocui.Gui) {
 			line := FormatImageLine(v, splitline[0], splitline[0], splitline[0], size, maxX)
 			fmt.Fprintln(v, line)
 		}
-		v.SetCursor(0, 0)
+		if len(*images) < 0 {
+			v.SetCursor(0, 0)
+		}
 		return nil
 	})
 }
