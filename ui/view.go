@@ -24,13 +24,12 @@ func ImageListView(g *gocui.Gui, maxX int, maxY int) error {
 	if err != nil && err != gocui.ErrUnknownView {
 		panic(err)
 	}
-
 	v.Title = v.Name()
 	v.Frame = false
 	v.Wrap = true
 	v.Highlight = true
-	//v.SetOrigin(0, 0)
-	v.SetCursor(0, 0)
+	v.SelBgColor = gocui.ColorGreen
+	v.SelFgColor = gocui.ColorBlack
 	g.SetCurrentView(v.Name())
 	if _, err = SetCurrentViewOnTop(g, v.Name()); err != nil {
 		return err
