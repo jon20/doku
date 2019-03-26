@@ -30,7 +30,6 @@ func ImageListView(g *gocui.Gui, maxX int, maxY int) error {
 	v.Highlight = true
 	v.SelBgColor = gocui.ColorGreen
 	v.SelFgColor = gocui.ColorBlack
-	g.SetCurrentView(v.Name())
 	if _, err = SetCurrentViewOnTop(g, v.Name()); err != nil {
 		return err
 	}
@@ -60,7 +59,9 @@ func ContainerListView(g *gocui.Gui, maxX int, maxY int) error {
 	}
 	v.Frame = false
 	v.Wrap = true
-	v.Autoscroll = true
+	v.Highlight = true
+	v.SelBgColor = gocui.ColorGreen
+	v.SelFgColor = gocui.ColorBlack
 	go ShowContainerListWithAutoRefresh(g)
 
 	return nil
