@@ -96,6 +96,9 @@ func ContainerListRefresh(g *gocui.Gui) {
 			line := FormatImageLine(v, item.Names[0], item.State, item.State, item.Names[0], maxX)
 			fmt.Fprintln(v, line)
 		}
+		if len(*containers) < 0 {
+			v.SetCursor(0, 0)
+		}
 		return nil
 	})
 }
