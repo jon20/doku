@@ -43,8 +43,6 @@ func ImagesRefresh(g *gocui.Gui) {
 		}
 		v.Clear()
 
-		v.SelBgColor = gocui.ColorGreen
-		v.SelFgColor = gocui.ColorBlack
 		for _, item := range *images {
 			//splitline := strings.Split(item.RepoTags[0], ":")
 			splitline := item.RepoTags
