@@ -43,3 +43,30 @@ func CursorUp(g *gocui.Gui, v *gocui.View) error {
 	}
 	return nil
 }
+
+var (
+	viewArr = []string{"Image", "Container"}
+	active  = 0
+)
+
+func NextView(g *gocui.Gui, v *gocui.View) error {
+	nextIndex := (active + 1) % len(viewArr)
+	name := viewArr[nextIndex]
+	_, err := SetCurrentViewOnTop(g, name)
+	if err != nil {
+		return err
+	}
+	next, err := g.View(name)
+	if err != nil {
+		return err
+	}
+
+	if next.SelBgColor == 0 {
+		next.SelBgColor = gocui.ColorGreen
+		next.SelFgColor = gocui.ColorBlack
+		v.SelBgColor = gocui.ColorDefault
+		v.SelFgColor = gocui.ColorWhite
+	}
+	active = nextIndex
+	return nil
+}
