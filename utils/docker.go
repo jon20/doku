@@ -7,7 +7,7 @@ import (
 	"github.com/docker/docker/client"
 )
 
-type Docker interface {
+type Cont interface {
 	GetActiveContainerList() (*[]types.Container, error)
 	GetImageList() (*[]types.ImageSummary, error)
 }
@@ -41,4 +41,11 @@ func (d *Docker) GetImageList() (*[]types.ImageSummary, error) {
 		imageLists = append(imageLists, image)
 	}
 	return &imageLists, nil
+}
+func (d *Docker) ContainerExecStart(containerID string, startCheck types.ExecStartCheck) error {
+	err := d.Client.ContainerExecStart(context.Background(), containerID, startCheck)
+	if err != nil {
+		return err
+	}
+	return nil
 }
