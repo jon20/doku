@@ -29,7 +29,7 @@ func (d *Docker) GetActiveContainerList() (*[]types.Container, error) {
 
 func (d *Docker) GetImageList() (*[]types.ImageSummary, error) {
 	var imageLists []types.ImageSummary
-	images, err := d.Client.ImageList(context.Background(), types.ImageListOptions{All: true})
+	images, err := d.Client.ImageList(context.Background(), types.ImageListOptions{All: false})
 	if err != nil {
 		return nil, err
 	}

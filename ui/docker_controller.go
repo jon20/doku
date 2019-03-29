@@ -42,13 +42,21 @@ func ImagesRefresh(g *gocui.Gui) {
 			return err
 		}
 		v.Clear()
+
 		for _, item := range *images {
-			splitline := strings.Split(item.RepoTags[0], ":")
+			//splitline := strings.Split(item.RepoTags[0], ":")
+			splitline := item.RepoTags
+			if len(splitline) == 0 {
+				break
+			}
+			splitline = strings.Split(splitline[0], ":")
 			size := strconv.FormatInt(item.Size, 10)
 			line := FormatImageLine(v, splitline[0], splitline[0], splitline[0], size, maxX)
 			fmt.Fprintln(v, line)
 		}
-		v.SetCursor(0, 0)
+		if len(*images) < 0 {
+			v.SetCursor(0, 0)
+		}
 		return nil
 	})
 }
@@ -85,6 +93,9 @@ func ContainerListRefresh(g *gocui.Gui) {
 		for _, item := range *containers {
 			line := FormatImageLine(v, item.Names[0], item.State, item.State, item.Names[0], maxX)
 			fmt.Fprintln(v, line)
+		}
+		if len(*containers) < 0 {
+			v.SetCursor(0, 0)
 		}
 		return nil
 	})

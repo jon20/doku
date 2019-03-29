@@ -17,25 +17,24 @@ func ImageListView(g *gocui.Gui, maxX int, maxY int) error {
 	v.Frame = true
 	v.Title = v.Name()
 	v.FgColor = gocui.AttrBold | gocui.ColorRed
+	v.Clear()
 	line := FormatImageLine(v, "REPOSITORY", "TAG", "IMAGE ID", "SIZE", maxX)
 	fmt.Fprintln(v, line)
-
-	v, err = g.SetView("Image", 0, 1, maxX-1, maxY/2)
-	if err != nil && err != gocui.ErrUnknownView {
-		panic(err)
+	if v, err := g.SetView("Image", 0, 1, maxX-1, maxY/2); err != nil {
+		if err != nil && err != gocui.ErrUnknownView {
+			panic(err)
+		}
+		v.Title = v.Name()
+		v.Frame = false
+		v.Wrap = true
+		v.Highlight = true
+		v.SelBgColor = gocui.ColorGreen
+		v.SelFgColor = gocui.ColorBlack
+		if _, err = SetCurrentViewOnTop(g, v.Name()); err != nil {
+			return err
+		}
+		go ShowImageListWithAutoRefresh(g)
 	}
-
-	v.Title = v.Name()
-	v.Frame = false
-	v.Wrap = true
-	v.Highlight = true
-	//v.SetOrigin(0, 0)
-	v.SetCursor(0, 0)
-	g.SetCurrentView(v.Name())
-	if _, err = SetCurrentViewOnTop(g, v.Name()); err != nil {
-		return err
-	}
-	go ShowImageListWithAutoRefresh(g)
 	return nil
 
 }
@@ -54,15 +53,16 @@ func ContainerListView(g *gocui.Gui, maxX int, maxY int) error {
 	line := FormatImageLine(v, "CONTAINER ID", "Run Status", "IMAGE", "Names", maxX)
 	fmt.Fprintln(v, line)
 
-	v, err = g.SetView("Container", 0, maxY/2+1, maxX-1, maxY-1)
+	if v, err := g.SetView("Container", 0, maxY/2+1, maxX-1, maxY-1); err != nil {
 
-	if err != nil && err != gocui.ErrUnknownView {
-		panic(err)
+		if err != nil && err != gocui.ErrUnknownView {
+			panic(err)
+		}
+		v.Frame = false
+		v.Wrap = true
+		v.Highlight = true
+
+		go ShowContainerListWithAutoRefresh(g)
 	}
-	v.Frame = false
-	v.Wrap = true
-	v.Autoscroll = true
-	go ShowContainerListWithAutoRefresh(g)
-
 	return nil
 }
