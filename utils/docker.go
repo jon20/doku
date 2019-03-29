@@ -7,6 +7,10 @@ import (
 	"github.com/docker/docker/client"
 )
 
+type Docker interface {
+	GetActiveContainerList() (*[]types.Container, error)
+	GetImageList() (*[]types.ImageSummary, error)
+}
 type Docker struct {
 	Client *client.Client
 }
