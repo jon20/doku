@@ -4,6 +4,13 @@ import (
 	"github.com/jroimartin/gocui"
 )
 
+type View interface {
+	SetCurrentViewOnTop(g *gocui.Gui, name string) (*gocui.View, error)
+	CursorDown(g *gocui.Gui, v *gocui.View) error
+	CursorUp(g *gocui.Gui, v *gocui.View) error
+	NextView(g *gocui.Gui, v *gocui.View)
+}
+
 func SetCurrentViewOnTop(g *gocui.Gui, name string) (*gocui.View, error) {
 	if _, err := g.SetCurrentView(name); err != nil {
 		return nil, err
