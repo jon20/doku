@@ -49,3 +49,10 @@ func (d *Docker) ContainerExecStart(containerID string, startCheck types.ExecSta
 	}
 	return nil
 }
+func (d *Docker) ContainerStart(containerID string, option types.ContainerStartOptions) error {
+	err := d.Client.ContainerStart(context.Background(), containerID, option)
+	if err != nil {
+		return err
+	}
+	return nil
+}
