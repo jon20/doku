@@ -2,6 +2,7 @@ package utils
 
 import (
 	"context"
+	"time"
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
@@ -55,4 +56,19 @@ func (d *Docker) ContainerStart(containerID string, option types.ContainerStartO
 		return err
 	}
 	return nil
+}
+func (d *Docker) ContainerStop(containerID string, timeout *time.Duration) error {
+	err := d.Client.ContainerStop(context.Background(), containerID, timeout)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (d *Docker) ContainerInspect(containerID string) (*types.ContainerJSON, error) {
+	inspect, err := d.Client.ContainerInspect(context.Background(), containerID)
+	if err != nil {
+		return nil, err
+	}
+	return &inspect, nil
 }
