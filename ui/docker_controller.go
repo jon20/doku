@@ -8,6 +8,7 @@ import (
 	"time"
 	"unicode/utf8"
 
+	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
 	"github.com/jroimartin/gocui"
 	"github.com/willf/pad"
@@ -102,6 +103,33 @@ func ContainerListRefresh(g *gocui.Gui) {
 		}
 		return nil
 	})
+}
+func ContainerStart(g *gocui.Gui, v *gocui.View) error {
+
+	cli, err := client.NewEnvClient()
+	if err != nil {
+		return err
+	}
+	defer cli.Close()
+	dockerHandler := utils.NewDockerClient(cli)
+	line, err := GetCurrentLine(g, v)
+	if err != nil {
+		return err
+	}
+	containerID := strings.Split(*line, " ")
+	err = dockerHandler.ContainerStart(containerID[0], types.ContainerStartOptions{})
+	if err != nil {
+		return err
+	}
+	return nil
+}
+func GetCurrentLine(g *gocui.Gui, v *gocui.View) (*string, error) {
+	_, cy := v.Cursor()
+	currentLine, err := v.Line(cy)
+	if err != nil {
+		return nil, err
+	}
+	return &currentLine, nil
 }
 
 // Format List Line
