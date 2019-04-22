@@ -72,6 +72,7 @@ func ShowContainerListWithAutoRefresh(g *gocui.Gui) {
 	}
 }
 
+// Container List Refresh
 func ContainerListRefresh(g *gocui.Gui) {
 	g.Update(func(g *gocui.Gui) error {
 		maxX, _ := g.Size()
@@ -91,7 +92,9 @@ func ContainerListRefresh(g *gocui.Gui) {
 		}
 		v.Clear()
 		for _, item := range *containers {
-			line := FormatImageLine(v, item.Names[0], item.State, item.State, item.Names[0], maxX)
+			// TODO: format ContainerID Line
+			containerID := item.Names[0]
+			line := FormatImageLine(v, containerID[1:], item.State, item.State, item.Names[0], maxX)
 			fmt.Fprintln(v, line)
 		}
 		if len(*containers) < 0 {
@@ -101,6 +104,7 @@ func ContainerListRefresh(g *gocui.Gui) {
 	})
 }
 
+// Format List Line
 func FormatImageLine(v *gocui.View, repository string, tag string, imageID string, size string, maxX int) string {
 	// 30 30 10
 	line := pad.Right(repository, maxX/3, " ") + pad.Right(tag, maxX/5, " ") + pad.Right(imageID, maxX/5, " ") + pad.Right(size, maxX/6, " ")
