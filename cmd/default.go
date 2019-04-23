@@ -46,6 +46,10 @@ func SetKeyBindings(g *gocui.Gui) {
 		log.Panicln(err)
 	}
 
+	// TODO: Create ui to display error text
+	if err := g.SetKeybinding("", gocui.KeyTab, gocui.ModNone, ui.NextView); err != nil {
+		log.Panicln(err)
+	}
 	if err := g.SetKeybinding("", gocui.KeyTab, gocui.ModNone, ui.NextView); err != nil {
 		log.Panicln(err)
 	}
