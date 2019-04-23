@@ -2,9 +2,13 @@ package utils
 
 import (
 	"context"
+	"fmt"
 	"time"
 
+	"github.com/docker/docker/api/types/network"
+
 	"github.com/docker/docker/api/types"
+	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/client"
 )
 
@@ -50,6 +54,16 @@ func (d *Docker) ContainerExecStart(containerID string, startCheck types.ExecSta
 	}
 	return nil
 }
+
+func (d *Docker) ContainerCreate(config *container.Config, hostConfig *container.HostConfig, networkConfig *network.NetworkingConfig, containerName string) error {
+	create, err := d.Client.ContainerCreate(context.Background(), config, hostConfig, networkConfig, containerName)
+	if err != nil {
+		return err
+	}
+	fmt.Println(create)
+	return nil
+}
+
 func (d *Docker) ContainerStart(containerID string, option types.ContainerStartOptions) error {
 	err := d.Client.ContainerStart(context.Background(), containerID, option)
 	if err != nil {
