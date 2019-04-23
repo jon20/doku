@@ -123,6 +123,26 @@ func ContainerStart(g *gocui.Gui, v *gocui.View) error {
 	}
 	return nil
 }
+
+func ContainerStop(g *gocui.Gui, v *gocui.View) error {
+	cli, err := client.NewEnvClient()
+	if err != nil {
+		return err
+	}
+	defer cli.Close()
+	dockerHandler := utils.NewDockerClient(cli)
+	line, err := GetCurrentLine(g, v)
+	if err != nil {
+		return err
+	}
+	containerID := strings.Split(*line, " ")
+	timeout := 5 * time.Second
+	err = dockerHandler.ContainerStop(containerID[0], &timeout)
+	if err != nil {
+		return err
+	}
+	return nil
+}
 func GetCurrentLine(g *gocui.Gui, v *gocui.View) (*string, error) {
 	_, cy := v.Cursor()
 	currentLine, err := v.Line(cy)
