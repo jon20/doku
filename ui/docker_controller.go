@@ -8,6 +8,7 @@ import (
 	"time"
 	"unicode/utf8"
 
+	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
 	"github.com/jroimartin/gocui"
 	"github.com/willf/pad"
@@ -72,6 +73,7 @@ func ShowContainerListWithAutoRefresh(g *gocui.Gui) {
 	}
 }
 
+// Container List Refresh
 func ContainerListRefresh(g *gocui.Gui) {
 	g.Update(func(g *gocui.Gui) error {
 		maxX, _ := g.Size()
@@ -91,7 +93,9 @@ func ContainerListRefresh(g *gocui.Gui) {
 		}
 		v.Clear()
 		for _, item := range *containers {
-			line := FormatImageLine(v, item.Names[0], item.State, item.State, item.Names[0], maxX)
+			// TODO: format ContainerID Line
+			containerID := item.Names[0]
+			line := FormatImageLine(v, containerID[1:], item.State, item.State, item.Names[0], maxX)
 			fmt.Fprintln(v, line)
 		}
 		if len(*containers) < 0 {
@@ -100,7 +104,55 @@ func ContainerListRefresh(g *gocui.Gui) {
 		return nil
 	})
 }
+func ContainerStart(g *gocui.Gui, v *gocui.View) error {
 
+	cli, err := client.NewEnvClient()
+	if err != nil {
+		return err
+	}
+	defer cli.Close()
+	dockerHandler := utils.NewDockerClient(cli)
+	line, err := GetCurrentLine(g, v)
+	if err != nil {
+		return err
+	}
+	containerID := strings.Split(*line, " ")
+	err = dockerHandler.ContainerStart(containerID[0], types.ContainerStartOptions{})
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func ContainerStop(g *gocui.Gui, v *gocui.View) error {
+	cli, err := client.NewEnvClient()
+	if err != nil {
+		return err
+	}
+	defer cli.Close()
+	dockerHandler := utils.NewDockerClient(cli)
+	line, err := GetCurrentLine(g, v)
+	if err != nil {
+		return err
+	}
+	containerID := strings.Split(*line, " ")
+	timeout := 5 * time.Second
+	err = dockerHandler.ContainerStop(containerID[0], &timeout)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+func GetCurrentLine(g *gocui.Gui, v *gocui.View) (*string, error) {
+	_, cy := v.Cursor()
+	currentLine, err := v.Line(cy)
+	if err != nil {
+		return nil, err
+	}
+	return &currentLine, nil
+}
+
+// Format List Line
 func FormatImageLine(v *gocui.View, repository string, tag string, imageID string, size string, maxX int) string {
 	// 30 30 10
 	line := pad.Right(repository, maxX/3, " ") + pad.Right(tag, maxX/5, " ") + pad.Right(imageID, maxX/5, " ") + pad.Right(size, maxX/6, " ")

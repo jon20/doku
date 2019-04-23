@@ -49,6 +49,12 @@ func SetKeyBindings(g *gocui.Gui) {
 	if err := g.SetKeybinding("", gocui.KeyTab, gocui.ModNone, ui.NextView); err != nil {
 		log.Panicln(err)
 	}
+	if err := g.SetKeybinding("Container", 'r', gocui.ModNone, ui.ContainerStart); err != nil {
+		log.Panicln(err)
+	}
+	if err := g.SetKeybinding("Container", 's', gocui.ModNone, ui.ContainerStop); err != nil {
+		log.Panicln(err)
+	}
 }
 
 func layout(g *gocui.Gui) error {

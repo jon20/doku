@@ -2,11 +2,16 @@ package utils
 
 import (
 	"context"
+	"time"
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
 )
 
+type Cont interface {
+	GetActiveContainerList() (*[]types.Container, error)
+	GetImageList() (*[]types.ImageSummary, error)
+}
 type Docker struct {
 	Client *client.Client
 }
@@ -37,4 +42,33 @@ func (d *Docker) GetImageList() (*[]types.ImageSummary, error) {
 		imageLists = append(imageLists, image)
 	}
 	return &imageLists, nil
+}
+func (d *Docker) ContainerExecStart(containerID string, startCheck types.ExecStartCheck) error {
+	err := d.Client.ContainerExecStart(context.Background(), containerID, startCheck)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+func (d *Docker) ContainerStart(containerID string, option types.ContainerStartOptions) error {
+	err := d.Client.ContainerStart(context.Background(), containerID, option)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+func (d *Docker) ContainerStop(containerID string, timeout *time.Duration) error {
+	err := d.Client.ContainerStop(context.Background(), containerID, timeout)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (d *Docker) ContainerInspect(containerID string) (*types.ContainerJSON, error) {
+	inspect, err := d.Client.ContainerInspect(context.Background(), containerID)
+	if err != nil {
+		return nil, err
+	}
+	return &inspect, nil
 }
