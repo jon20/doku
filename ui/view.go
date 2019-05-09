@@ -66,3 +66,14 @@ func ContainerListView(g *gocui.Gui, maxX int, maxY int) error {
 	}
 	return nil
 }
+
+func ContainerCreateWindowView(g *gocui.Gui, maxX int, maxY int) error {
+	v, err := g.SetView("ContainerCreateForm", maxX/4, maxY/3, maxX-maxX/4, maxY-maxY/3)
+	if err != nil {
+		return err
+	}
+	fmt.Fprintln(v, "aaasas")
+	v.Clear()
+	v.Frame = true
+	return nil
+}
