@@ -143,6 +143,19 @@ func ContainerStop(g *gocui.Gui, v *gocui.View) error {
 	}
 	return nil
 }
+
+func CreateContainer(g *gocui.Gui, v *gocui.View) error {
+	maxX, maxY := g.Size()
+	_, err := g.View("ContainerCreateForm")
+	if err != nil {
+
+		ContainerCreateWindowView(g, maxX, maxY)
+	} else {
+		g.DeleteView("ContainerCreateForm")
+
+	}
+	return nil
+}
 func GetCurrentLine(g *gocui.Gui, v *gocui.View) (*string, error) {
 	_, cy := v.Cursor()
 	currentLine, err := v.Line(cy)
