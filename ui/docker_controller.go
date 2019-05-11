@@ -32,7 +32,7 @@ func ImagesRefresh(g *gocui.Gui) {
 		if err != nil {
 			return err
 		}
-		cli, err := client.NewEnvClient()
+		cli, err := client.NewClientWithOpts(client.FromEnv)
 		if err != nil {
 			return err
 		}
@@ -81,7 +81,7 @@ func ContainerListRefresh(g *gocui.Gui) {
 		if err != nil {
 			return err
 		}
-		cli, err := client.NewEnvClient()
+		cli, err := client.NewClientWithOpts(client.FromEnv)
 		if err != nil {
 			return err
 		}
@@ -106,7 +106,7 @@ func ContainerListRefresh(g *gocui.Gui) {
 }
 func ContainerStart(g *gocui.Gui, v *gocui.View) error {
 
-	cli, err := client.NewEnvClient()
+	cli, err := client.NewClientWithOpts(client.FromEnv)
 	if err != nil {
 		return err
 	}
@@ -125,7 +125,7 @@ func ContainerStart(g *gocui.Gui, v *gocui.View) error {
 }
 
 func ContainerStop(g *gocui.Gui, v *gocui.View) error {
-	cli, err := client.NewEnvClient()
+	cli, err := client.NewClientWithOpts(client.FromEnv)
 	if err != nil {
 		return err
 	}
