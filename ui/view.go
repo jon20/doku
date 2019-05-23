@@ -69,11 +69,24 @@ func ContainerListView(g *gocui.Gui, maxX int, maxY int) error {
 
 func ContainerCreateWindowView(g *gocui.Gui, maxX int, maxY int) error {
 	v, err := g.SetView("ContainerCreateForm", maxX/4, maxY/3, maxX-maxX/4, maxY-maxY/3)
-	if err != nil {
-		return err
+	if err != nil && err != gocui.ErrUnknownView {
+		panic(err)
 	}
-	fmt.Fprintln(v, "aaasas")
-	v.Clear()
+	v.Wrap = true
 	v.Frame = true
+	v.Title = "Create Container"
+	v.FgColor = gocui.AttrBold
+	fmt.Fprintln(v, "Enter ContainerName")
+	if v, err := g.SetView("Container", 0, maxY/2+1, maxX-1, maxY-1); err != nil {
+
+		if err != nil && err != gocui.ErrUnknownView {
+			panic(err)
+		}
+		v.Frame = false
+		v.Wrap = true
+		v.Highlight = true
+
+		go ShowContainerListWithAutoRefresh(g)
+	}
 	return nil
 }
