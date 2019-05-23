@@ -50,7 +50,7 @@ func SetKeyBindings(g *gocui.Gui) {
 	if err := g.SetKeybinding("", gocui.KeyTab, gocui.ModNone, ui.NextView); err != nil {
 		log.Panicln(err)
 	}
-	if err := g.SetKeybinding("", gocui.KeyTab, gocui.ModNone, ui.NextView); err != nil {
+	if err := g.SetKeybinding("Image", gocui.KeyEnter, gocui.ModNone, ui.CreateContainer); err != nil {
 		log.Panicln(err)
 	}
 	if err := g.SetKeybinding("Container", 'r', gocui.ModNone, ui.ContainerStart); err != nil {
