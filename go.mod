@@ -6,6 +6,7 @@ require (
 	github.com/docker/go-connections v0.4.0 // indirect
 	github.com/docker/go-metrics v0.0.0-20181218153428-b84716841b82 // indirect
 	github.com/docker/go-units v0.3.3 // indirect
+	github.com/gogo/protobuf v1.2.1 // indirect
 	github.com/google/pprof v0.0.0-20190208070709-b421f19a5c07 // indirect
 	github.com/gorilla/mux v1.7.0 // indirect
 	github.com/ianlancetaylor/demangle v0.0.0-20181102032728-5e5cf60278f6 // indirect
