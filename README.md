@@ -2,6 +2,7 @@
 
 TUI Client Tool for Docker.
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/jon20/doku)](https://goreportcard.com/report/github.com/jon20/doku)
 [![CircleCI](https://circleci.com/gh/jon20/doku.svg?style=svg)](https://circleci.com/gh/jon20/doku)
 ## Installation
 Working and tested on Linux
