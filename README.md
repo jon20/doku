@@ -12,7 +12,7 @@ TUI Client Tool for Docker.
 Working and tested on Linux
 ### Source
 
-``` go get -u https://github.com/jon20/doku```
+``` go get -u github.com/jon20/doku```
 
 ## Usage
 
