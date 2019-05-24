@@ -1,4 +1,4 @@
-module doku
+module github.com/jon20/doku
 
 require (
 	github.com/docker/distribution v2.7.1+incompatible
