@@ -24,3 +24,5 @@ require (
 	golang.org/x/net v0.0.0-20190213061140-3a22650c66bd // indirect
 	golang.org/x/sys v0.0.0-20190222171317-cd391775e71e // indirect
 )
+
+replace github.com/docker/docker v1.13.1 => github.com/docker/engine v0.0.0-20190423201726-d2cfbce3f3b0
