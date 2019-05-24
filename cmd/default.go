@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	"doku/ui"
+	"github.com/jon20/doku/ui"
 
 	"github.com/jroimartin/gocui"
 	"github.com/spf13/cobra"
