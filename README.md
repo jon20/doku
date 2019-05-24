@@ -6,6 +6,7 @@
 TUI Client Tool for Docker.
 
 <img src="./assets/sample-doku.gif" />
+
 ## Installation
 
 Working and tested on Linux
