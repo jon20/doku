@@ -1,12 +1,13 @@
 package ui
 
 import (
-	"doku/utils"
 	"fmt"
 	"strconv"
 	"strings"
 	"time"
 	"unicode/utf8"
+
+	"github.com/jon20/doku/utils"
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
