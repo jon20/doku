@@ -7,8 +7,9 @@ before:
     # you may remove this if you don't need go generate
     - go generate ./...
 builds:
-- main: "./main.go"
-- binary: doku
+-  binary: doku
+   goos:
+    - linux
 - env:
   - CGO_ENABLED=0
 archives:
@@ -28,3 +29,7 @@ changelog:
     exclude:
     - '^docs:'
     - '^test:'
+release:
+  github:
+    owner: jon20
+    name: doku
