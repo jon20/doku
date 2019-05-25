@@ -10,8 +10,6 @@ builds:
   - binary: doku
     goos:
       - linux
-  - env:
-    - CGO_ENABLED=0
 archives:
 - replacements:
     darwin: Darwin
@@ -30,6 +28,4 @@ changelog:
     - '^docs:'
     - '^test:'
 release:
-  github:
-    owner: jon20
-    name: doku
+  prerelease: true
