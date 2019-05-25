@@ -7,6 +7,9 @@ before:
     # you may remove this if you don't need go generate
     - go generate ./...
 builds:
+- id: "doku"
+- main: "./main.go"
+- binary: doku
 - env:
   - CGO_ENABLED=0
 archives:
